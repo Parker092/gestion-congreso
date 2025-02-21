@@ -1,0 +1,39 @@
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-congreso
+    restart: always
+    environment:
+      POSTGRES_USER: congresoadmin
+      POSTGRES_PASSWORD: congresopassword
+      POSTGRES_DB: gestion_congreso
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  spring-app:
+    build: .
+    container_name: spring-congreso
+    restart: always
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/gestion_congreso
+      SPRING_DATASOURCE_USERNAME: congresoadmin
+      SPRING_DATASOURCE_PASSWORD: congresopassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
