@@ -2,6 +2,7 @@ package com.example.gestion_congreso.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -11,14 +12,16 @@ public class Sesion {
     private Long id;
 
     private String sala;
-    private String fechaHora;
+
+    @Column(nullable = false)
+    private LocalDateTime fechaHora;  // ✅ Se asegura que sea LocalDateTime en la base de datos
 
     @OneToMany(mappedBy = "sesion")
-    @JsonManagedReference  // 🔹 Permite serializar presentaciones sin generar bucles
+    @JsonManagedReference
     private List<Presentacion> presentaciones;
 
     @ManyToOne
-    @JoinColumn(name = "chairman_id")
+    @JoinColumn(name = "chairman_id", nullable = false)
     private Congresista chairman;
 
     // ✅ Getters y Setters
@@ -30,7 +33,7 @@ public class Sesion {
         return sala;
     }
 
-    public String getFechaHora() {
+    public LocalDateTime getFechaHora() {  // ✅ Se mantiene LocalDateTime
         return fechaHora;
     }
 
@@ -40,5 +43,17 @@ public class Sesion {
 
     public Congresista getChairman() {
         return chairman;
+    }
+
+    public void setSala(String sala) {
+        this.sala = sala;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public void setChairman(Congresista chairman) {
+        this.chairman = chairman;
     }
 }

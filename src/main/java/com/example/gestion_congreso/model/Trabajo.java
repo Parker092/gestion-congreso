@@ -13,10 +13,7 @@ public class Trabajo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
     private String titulo;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String resumen;
 
     @OneToMany(mappedBy = "trabajo")
